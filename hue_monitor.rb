@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'json'
-require 'rest-client'
 
 class HueMonitor
   @@colors = {
@@ -12,7 +11,7 @@ class HueMonitor
   }
 
   def initialize notifier
-    @notifier = notifier || RestClient
+    @notifier = notifier
   end
 
   def self.colors
@@ -43,6 +42,8 @@ class HueMonitor
   end
 
   def execute jenkins_url, hue_url
+    puts jenkins_url
+    puts hue_url
     jenkins_view = JSON.parse(@notifier.get jenkins_url)
     statuses = jenkins_view['jobs'].map {|j| j['color']}.uniq
 
