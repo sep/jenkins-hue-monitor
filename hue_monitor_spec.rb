@@ -12,7 +12,7 @@ describe HueMonitor, "#execute" do
     json = create_json [ :blue, :blue, :blue, :blue, :blue ]
     allow(@notifier).to receive(:get).and_return(json)
     expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{green}}/, anything())
-    @monitor.execute @some_url
+    @monitor.execute @some_url, @some_url
   end
 
   it "should call for yellow if at least one build is building and one has failed" do
@@ -20,7 +20,7 @@ describe HueMonitor, "#execute" do
     json = create_json [ :blue, :blue_anime, :red, :blue, :blue ]
     allow(@notifier).to receive(:get).and_return(json)
     expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{yellow}}/, anything())
-    @monitor.execute @some_url
+    @monitor.execute @some_url, @some_url
   end
 
   it "should call for yellow if a failed build is building" do
@@ -28,7 +28,7 @@ describe HueMonitor, "#execute" do
     json = create_json [ :blue, :red_anime, :blue, :blue, :blue ]
     allow(@notifier).to receive(:get).and_return(json)
     expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{yellow}}/, anything())
-    @monitor.execute @some_url
+    @monitor.execute @some_url, @some_url
   end
 
   it "should call for blue if all are passing and at least one is building" do
@@ -36,7 +36,7 @@ describe HueMonitor, "#execute" do
     json = create_json [ :blue, :blue, :blue_anime, :blue, :blue_anime ]
     allow(@notifier).to receive(:get).and_return(json)
     expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{blue}}/, anything())
-    @monitor.execute @some_url
+    @monitor.execute @some_url, @some_url
   end
 
   it "should call for red if any are failing and none are building" do
@@ -44,7 +44,7 @@ describe HueMonitor, "#execute" do
     json = create_json [ :blue, :blue, :blue, :red, :blue ]
     allow(@notifier).to receive(:get).and_return(json)
     expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{red}}/, anything())
-    @monitor.execute @some_url
+    @monitor.execute @some_url, @some_url
   end
 
   def create_json colors

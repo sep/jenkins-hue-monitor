@@ -35,27 +35,26 @@ class HueMonitor
     statuses.include? "blue" and statuses.size == 1
   end
 
-  def set_color color
-    hue_url = "http://huebridge.net.sep.com/api/jenkinsuser/lights/2/state"
+  def set_color color, url
+    hue_url = url
     put_body = { 'hue' => @@colors[color] }.to_json
     options = { :content_type => :json }
     puts @notifier.put hue_url, put_body, options
   end
 
-  def execute url
-    jenkins_view = JSON.parse(@notifier.get url)
+  def execute jenkins_url, hue_url
+    jenkins_view = JSON.parse(@notifier.get jenkins_url)
     statuses = jenkins_view['jobs'].map {|j| j['color']}.uniq
 
     if is_failed_and_building? statuses
-      set_color "yellow"
+      set_color "yellow", hue_url
     elsif is_failed? statuses
-      set_color "red"
+      set_color "red", hue_url
     elsif is_building? statuses and !is_failed? statuses
-      set_color "blue"
+      set_color "blue", hue_url
     elsif is_passed? statuses
-      set_color "green"
+      set_color "green", hue_url
     end
   end
 end
 
-# HueMonitor.new.execute "http://jenkins.net.sep.com/view/Visium/api/json"
