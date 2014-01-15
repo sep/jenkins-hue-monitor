@@ -29,11 +29,14 @@ This script will aggregate multiple projects (that are united under a single vie
 * If all builds are passing and any are building, the light will be **blue**
 * If all builds are passing and none are building, the light will be **green**
 
+It has been brought to my attention that this is a stupid color scheme. If a better one is proposed I will consider it briefly and then dismiss it with thinly veiled disgust.
+
 ## You had me at "Hue". How does this work?
 
 There are a few prerequisites for E-Z Mode:
 
 * You should probably have Jenkins installed
+* You should probably be building things within your Jenkins installation
 * The projects you want to monitor should be collected into a View
 * You need to be running builds on some kind of Unix
 * You need to have Ruby installed, preferably some recent version (2.0-ish)
