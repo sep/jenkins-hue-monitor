@@ -12,5 +12,3 @@ end
 puts options
 
 HueMonitor.new(RestClient).execute options[:jenkins_url], options[:hue_url]
-# "http://jenkins.net.sep.com/view/Visium/api/json"
-# "http://huebridge.net.sep.com/api/jenkinsuser/lights/2/state"

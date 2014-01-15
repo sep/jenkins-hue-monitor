@@ -42,8 +42,6 @@ class HueMonitor
   end
 
   def execute jenkins_url, hue_url
-    puts jenkins_url
-    puts hue_url
     jenkins_view = JSON.parse(@notifier.get jenkins_url)
     statuses = jenkins_view['jobs'].map {|j| j['color']}.uniq
 
