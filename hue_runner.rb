@@ -1,3 +1,4 @@
+require 'trollop'
 require_relative 'hue_monitor'
 
 options = Trollop::options do
