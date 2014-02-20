@@ -12,7 +12,6 @@ class HueMonitor
 
   def initialize(notifier, colors = nil)
     @colors = @@color_defaults.dup.merge(colors || {})
-    p @colors
     @notifier = notifier
   end
 
