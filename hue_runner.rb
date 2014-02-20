@@ -21,5 +21,5 @@ HueMonitor
     passed: options[:color_passed],
     failed_building: options[:color_failed_building],
     failed: options[:color_failed]
-  })
+  }.reject{|k,v| v.nil?})
   .execute(options[:jenkins_url], options[:hue_url])
