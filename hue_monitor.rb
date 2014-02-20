@@ -3,19 +3,20 @@
 require 'json'
 
 class HueMonitor
-  @@colors = {
-    "blue" => 46920,
-    "green" => 25717,
-    "yellow" => 12750,
-    "red" => 0
+  @@color_defaults = {
+    building: 46920,
+    passed: 25717,
+    failed_building: 12750,
+    failed: 0
   }
 
-  def initialize notifier
+  def initialize(notifier, colors = nil)
+    @colors = @@color_defaults.dup.merge(colors || {})
     @notifier = notifier
   end
 
   def self.colors
-    @@colors
+    @@color_defaults
   end
 
   def is_building? statuses
@@ -36,7 +37,7 @@ class HueMonitor
 
   def set_color color, url
     hue_url = url
-    put_body = { 'hue' => @@colors[color] }.to_json
+    put_body = { 'hue' => @colors[color] }.to_json
     options = { :content_type => :json }
     puts @notifier.put hue_url, put_body, options
   end
@@ -46,13 +47,13 @@ class HueMonitor
     statuses = jenkins_view['jobs'].map {|j| j['color']}.uniq
 
     if is_failed_and_building? statuses
-      set_color "yellow", hue_url
+      set_color :failed_building, hue_url
     elsif is_failed? statuses
-      set_color "red", hue_url
+      set_color :failed, hue_url
     elsif is_building? statuses and !is_failed? statuses
-      set_color "blue", hue_url
+      set_color :building, hue_url
     elsif is_passed? statuses
-      set_color "green", hue_url
+      set_color :passed, hue_url
     end
   end
 end
