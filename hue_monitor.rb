@@ -16,7 +16,7 @@ class HueMonitor
     @colors = @@color_defaults.dup.merge(colors || {})
     @colors.keys.each{|k| @colors[k] = @colors[k].to_i}
 
-    @brightness = brightness.to_i || @@brightness_default
+    @brightness = (brightness || @@brightness_default).to_i
     @notifier = notifier
   end
 
