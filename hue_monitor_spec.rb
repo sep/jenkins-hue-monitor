@@ -10,7 +10,7 @@ describe HueMonitor, "#execute" do
   it "should call for passed if all builds are passing" do
     green = HueMonitor::colors[:passed]
     allow(@notifier).to receive(:get).and_return(passed_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{green}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{green}/, anything())
     @monitor.execute @some_url, @some_url
   end
 
@@ -18,28 +18,28 @@ describe HueMonitor, "#execute" do
     failed_building = HueMonitor::colors[:failed_building]
     json = create_json [ :blue, :blue_anime, :red, :blue, :blue ]
     allow(@notifier).to receive(:get).and_return(json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{failed_building}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{failed_building}/, anything())
     @monitor.execute @some_url, @some_url
   end
 
   it "should call for failed_building if a failed build is building" do
     failed_building = HueMonitor::colors[:failed_building]
     allow(@notifier).to receive(:get).and_return(failed_building_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{failed_building}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /{"hue":#{failed_building}/, anything())
     @monitor.execute @some_url, @some_url
   end
 
   it "should call for building if all are passing and at least one is building" do
     building = HueMonitor::colors[:building]
     allow(@notifier).to receive(:get).and_return(building_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{building}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{building}/, anything())
     @monitor.execute @some_url, @some_url
   end
 
   it "should call for failed if any are failing and none are building" do
     failed = HueMonitor::colors[:failed]
     allow(@notifier).to receive(:get).and_return(failed_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{failed}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{failed}/, anything())
     @monitor.execute @some_url, @some_url
   end
 end
@@ -54,7 +54,7 @@ describe HueMonitor, "color options" do
     @monitor = HueMonitor.new(@notifier, {failed: 123})
 
     allow(@notifier).to receive(:get).and_return(failed_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{123}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{123}/, anything())
 
     @monitor.execute @some_url, @some_url
   end
@@ -63,7 +63,7 @@ describe HueMonitor, "color options" do
     @monitor = HueMonitor.new(@notifier, {failed_building: 456})
 
     allow(@notifier).to receive(:get).and_return(failed_building_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{456}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /{"hue":#{456}/, anything())
 
     @monitor.execute @some_url, @some_url
   end
@@ -72,7 +72,7 @@ describe HueMonitor, "color options" do
     @monitor = HueMonitor.new(@notifier, {passed: 789})
 
     allow(@notifier).to receive(:get).and_return(passed_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{789}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{789}/, anything())
 
     @monitor.execute @some_url, @some_url
   end
@@ -81,11 +81,27 @@ describe HueMonitor, "color options" do
     @monitor = HueMonitor.new(@notifier, {building: 321})
 
     allow(@notifier).to receive(:get).and_return(building_json)
-    expect(@notifier).to receive(:put).with(/http/, %Q/{"hue":#{321}}/, anything())
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{321}/, anything())
 
     @monitor.execute @some_url, @some_url
   end
 
+end
+
+describe HueMonitor, "brightness" do
+  before :each do
+    @notifier = double('notifier')
+    @some_url = "http://url"
+  end
+
+  it 'sets the brightness' do
+    @monitor = HueMonitor.new(@notifier, nil, 20)
+
+    allow(@notifier).to receive(:get).and_return(passed_json)
+    expect(@notifier).to receive(:put).with(/http/, /"bri":#{20}/, anything())
+
+    @monitor.execute @some_url, @some_url
+  end
 end
 
 def passed_json

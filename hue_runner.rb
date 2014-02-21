@@ -11,6 +11,7 @@ options = Trollop::options do
   opt :color_failed_building, "Color for 'failed building' status", :short => 'w', :type => :string
   opt :color_building, "Color for 'building' status", :short => 'b', :type => :string
   opt :color_passed, "Color for 'passed' status", :short => 'p', :type => :string
+  opt :brightness, "Brightness for the light (0-lowest, 255-highest)", :short => 'r', :type => :string
 end
 
 puts options
@@ -21,5 +22,5 @@ HueMonitor
     passed: options[:color_passed],
     failed_building: options[:color_failed_building],
     failed: options[:color_failed]
-  }.reject{|k,v| v.nil?})
+  }.reject{|k,v| v.nil?}, options[:brightness])
   .execute(options[:jenkins_url], options[:hue_url])

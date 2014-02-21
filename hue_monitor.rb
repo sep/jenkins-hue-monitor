@@ -10,8 +10,11 @@ class HueMonitor
     failed: 0
   }
 
-  def initialize(notifier, colors = nil)
+  @@brightness_default = 100
+
+  def initialize(notifier, colors = nil, brightness = nil)
     @colors = @@color_defaults.dup.merge(colors || {})
+    @brightness ||= brightness
     @notifier = notifier
   end
 
@@ -37,7 +40,7 @@ class HueMonitor
 
   def set_color color, url
     hue_url = url
-    put_body = { 'hue' => @colors[color] }.to_json
+    put_body = { 'hue' => @colors[color], 'bri' => @brightness }.to_json
     options = { :content_type => :json }
     puts @notifier.put hue_url, put_body, options
   end
