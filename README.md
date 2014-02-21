@@ -76,7 +76,7 @@ The instructions below assume you're using RVM in Linux and have Ruby 2.0 instal
         -f 0 -w 12750 -b 46920 -p 25717
 </pre>
 
-This assumes you have Jenkins running at `http://jenkins/` with a view called `MyView` that contains all the projects you want to monitor. Additionally you have the Hue Bridge installed at `http://huebrige/` with a username `user` and a light ID of `x`.
+This assumes you have Jenkins running at `http://jenkins/` with a view called `MyView` that contains all the projects you want to monitor. Additionally you have the Hue Bridge installed at `http://huebridge/` with a username `user` and a light ID of `x`.
 
 You can certainly configure this differently if you know what you're doing. I didn't know what I was doing.
 
