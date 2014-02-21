@@ -14,7 +14,7 @@ class HueMonitor
 
   def initialize(notifier, colors = nil, brightness = nil)
     @colors = @@color_defaults.dup.merge(colors || {})
-    @brightness ||= brightness
+    @brightness = brightness || @@brightness_default
     @notifier = notifier
   end
 
