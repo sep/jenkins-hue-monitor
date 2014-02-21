@@ -10,11 +10,13 @@ class HueMonitor
     failed: 0
   }
 
-  @@brightness_default = 100
+  @@brightness_default = 255
 
   def initialize(notifier, colors = nil, brightness = nil)
     @colors = @@color_defaults.dup.merge(colors || {})
-    @brightness = brightness || @@brightness_default
+    @colors.keys.each{|k| @colors[k] = @colors[k].to_i}
+
+    @brightness = brightness.to_i || @@brightness_default
     @notifier = notifier
   end
 
