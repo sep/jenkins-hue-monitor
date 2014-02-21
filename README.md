@@ -33,7 +33,7 @@ It has been brought to my attention that this is a stupid color scheme. You're r
 
 ### In case you want stupid colors...
 
-Colors can be passed as command line arguments.
+Colors can be passed as optional command line arguments.  But really, why would you?  The defaults are already correct.
 
 The aforementioned colors are defaults, but you can also customize each one separately.
 
