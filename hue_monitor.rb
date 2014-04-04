@@ -37,7 +37,9 @@ class HueMonitor
   end
 
   def is_passed? statuses
-    statuses.include? "blue" and statuses.size == 1
+    statuses.include? "blue" and
+      ((statuses.include? "disabled" and statuses.size == 2) or
+       (statuses.size == 1))
   end
 
   def set_color color, url
