@@ -37,9 +37,15 @@ class HueMonitor
   end
 
   def is_passed? statuses
-    statuses.include? "blue" and
-      ((statuses.include? "disabled" and statuses.size == 2) or
-       (statuses.size == 1))
+    is_only_blue? statuses or is_only_blue_and_disabled? statuses
+  end
+
+  def is_only_blue? statuses
+    statuses.include? "blue" and statuses.size == 1
+  end
+
+  def is_only_blue_and_disabled? statuses
+    statuses.include? "blue" and statuses.include? "disabled" and statuses.size == 2
   end
 
   def set_color color, url

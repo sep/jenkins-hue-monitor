@@ -14,6 +14,13 @@ describe HueMonitor, "#execute" do
     @monitor.execute @some_url, @some_url
   end
 
+  it "should call for passed if all non-disabled builds are passing" do
+    green = HueMonitor::colors[:passed]
+    allow(@notifier).to receive(:get).and_return(passed_json_with_disabled_build)
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{green}/, anything())
+    @monitor.execute @some_url, @some_url
+  end
+
   it "should call for failed_building if at least one build is building and one has failed" do
     failed_building = HueMonitor::colors[:failed_building]
     json = create_json [ :blue, :blue_anime, :red, :blue, :blue ]
@@ -106,6 +113,10 @@ end
 
 def passed_json
   create_json [ :blue, :blue, :blue, :blue, :blue ]
+end
+
+def passed_json_with_disabled_build
+  create_json [ :blue, :blue, :blue, :disabled, :blue ]
 end
 
 def failed_json
