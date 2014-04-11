@@ -49,6 +49,13 @@ describe HueMonitor, "#execute" do
     expect(@notifier).to receive(:put).with(/http/, /"hue":#{failed}/, anything())
     @monitor.execute @some_url, @some_url
   end
+
+  it "should call for unstable if any are unstable and none are failing or building" do
+    unstable = HueMonitor::colors[:unstable]
+    allow(@notifier).to receive(:get).and_return(unstable_json)
+    expect(@notifier).to receive(:put).with(/http/, /"hue":#{unstable}/, anything())
+    @monitor.execute @some_url, @some_url
+  end
 end
 
 describe HueMonitor, "color options" do
@@ -125,6 +132,10 @@ end
 
 def building_json
   create_json [ :blue, :blue_anime, :blue, :blue, :blue_anime ]
+end
+
+def unstable_json
+  create_json [ :blue, :yellow, :blue, :blue ]
 end
 
 def failed_building_json

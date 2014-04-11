@@ -7,7 +7,8 @@ class HueMonitor
     building: 46920,
     passed: 25717,
     failed_building: 12750,
-    failed: 0
+    failed: 0,
+    unstable: 6000
   }
 
   @@brightness_default = 255
@@ -40,6 +41,18 @@ class HueMonitor
     is_only_blue? statuses or is_only_blue_and_disabled? statuses
   end
 
+  def is_unstable? statuses
+    is_only_unstable? statuses or is_only_blue_and_unstable? statuses
+  end
+
+  def is_only_unstable? statuses
+    statuses.include? "yellow" and statuses.size == 1
+  end
+
+  def is_only_blue_and_unstable? statuses
+    statuses.include? "blue" and statuses.include? "yellow" and statuses.size == 2
+  end
+
   def is_only_blue? statuses
     statuses.include? "blue" and statuses.size == 1
   end
@@ -67,6 +80,8 @@ class HueMonitor
       set_color :building, hue_url
     elsif is_passed? statuses
       set_color :passed, hue_url
+    elsif is_unstable? statuses
+      set_color :unstable, hue_url
     end
   end
 end
