@@ -69,7 +69,7 @@ The instructions below assume you're using RVM in Linux and have Ruby 2.0 instal
     #!/bin/bash
     
     . "$HOME/.rvm/scripts/rvm"
-    bundle install &&                           \
+    bundle install &&                               \
         ruby hue_runner.rb                          \
         -j http://jenkins/view/MyView/api/json      \
         -l http://huebridge/api/user/lights/x/state \
