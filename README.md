@@ -24,25 +24,25 @@ Yeah. There's a very nice plugin called [hue-light-plugin](https://github.com/je
 
 This script will aggregate multiple projects (that are united under a single view) and update the color based on the following rules:
 
-* If any builds are failing and none are building, the light will be **red**
-* If any builds are failing and any are building, the light will be **yellow**
-* If all builds are passing and any are building, the light will be **blue**
-* If all builds are passing and none are building, the light will be **green**
+* If any builds are failing and none are building, the status is set to "failed" (default: red)
+* If any builds are failing and any are building, the light will be "failed and building (default: yellow)
+* If all builds are passing and any are building, the light will be "building" (default: blue)
+* If all builds are passing and none are building, the light will be "passed" (default: green)
+* If all builds are passing, at least one is unstable, and none are building, the light will be "unstable" (default: orange)
 
-It has been brought to my attention that this is a stupid color scheme. You're right.
+### In case you want your own colors...
 
-### In case you want stupid colors...
-
-Colors can be passed as optional command line arguments.  But really, why would you?  The defaults are already correct.
+Colors can be passed as optional command line arguments.  But really, why would you?  The defaults are already objectively correct.
 
 The aforementioned colors are defaults, but you can also customize each one separately.
 
-* `-f` lets you customize _failed_ status.
-* `-w` lets you customize _failed and building_ status.
-* `-b` lets you customize _building_ status.
-* `-p` lets you customize _passed_ status.
+* `-f` lets you customize the _failed_ status.
+* `-w` lets you customize the _failed and building_ status.
+* `-b` lets you customize the _building_ status.
+* `-p` lets you customize the _passed_ status.
+* `-u` lets you customize the _unstable_ status.
 
-The value to pass is the __h__ (hue) part of an [_HSB_](http://colorizer.org/) color.
+The value to pass is the __h__ (hue) part of an [_HSB_](http://colorizer.org/) color, except Hue is expecting a value between 0-65536 instead of 0-360, so scale it (multiply by 65536 and divide by 360).
 
 ## You had me at "Hue". How does this work?
 
@@ -73,7 +73,7 @@ The instructions below assume you're using RVM in Linux and have Ruby 2.0 instal
         ruby hue_runner.rb                          \
         -j http://jenkins/view/MyView/api/json      \
         -l http://huebridge/api/user/lights/x/state \
-        -f 0 -w 12750 -b 46920 -p 25717
+        -f 0 -w 12750 -b 46920 -p 25717 -u 6000
 </pre>
 
 This assumes you have Jenkins running at `http://jenkins/` with a view called `MyView` that contains all the projects you want to monitor. Additionally you have the Hue Bridge installed at `http://huebridge/` with a username `user` and a light ID of `x`.
