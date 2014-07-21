@@ -65,7 +65,7 @@ describe HueMonitor, "color options" do
   end
 
   it "allows to override failed color" do
-    @monitor = HueMonitor.new(@notifier, {failed: 123})
+    @monitor = HueMonitor.new(@notifier, colors: {failed: 123})
 
     allow(@notifier).to receive(:get).and_return(failed_json)
     expect(@notifier).to receive(:put).with(/http/, /"hue":#{123}/, anything())
@@ -74,7 +74,7 @@ describe HueMonitor, "color options" do
   end
 
   it "allows to override failed_building color" do
-    @monitor = HueMonitor.new(@notifier, {failed_building: 456})
+    @monitor = HueMonitor.new(@notifier, colors: {failed_building: 456})
 
     allow(@notifier).to receive(:get).and_return(failed_building_json)
     expect(@notifier).to receive(:put).with(/http/, /{"hue":#{456}/, anything())
@@ -83,7 +83,7 @@ describe HueMonitor, "color options" do
   end
 
   it "allows to override passed color" do
-    @monitor = HueMonitor.new(@notifier, {passed: 789})
+    @monitor = HueMonitor.new(@notifier, colors: {passed: 789})
 
     allow(@notifier).to receive(:get).and_return(passed_json)
     expect(@notifier).to receive(:put).with(/http/, /"hue":#{789}/, anything())
@@ -92,7 +92,7 @@ describe HueMonitor, "color options" do
   end
 
   it "allows to override building color" do
-    @monitor = HueMonitor.new(@notifier, {building: 321})
+    @monitor = HueMonitor.new(@notifier, colors: {building: 321})
 
     allow(@notifier).to receive(:get).and_return(building_json)
     expect(@notifier).to receive(:put).with(/http/, /"hue":#{321}/, anything())
@@ -109,10 +109,26 @@ describe HueMonitor, "brightness" do
   end
 
   it 'sets the brightness' do
-    @monitor = HueMonitor.new(@notifier, nil, 20)
+    @monitor = HueMonitor.new(@notifier, brightness: 20)
 
     allow(@notifier).to receive(:get).and_return(passed_json)
     expect(@notifier).to receive(:put).with(/http/, /"bri":#{20}/, anything())
+
+    @monitor.execute @some_url, @some_url
+  end
+end
+
+describe HueMonitor, "saturation" do
+  before :each do
+    @notifier = double('notifier')
+    @some_url = "http://url"
+  end
+
+  it 'sets the saturation' do
+    @monitor = HueMonitor.new(@notifier, saturation: 80)
+
+    allow(@notifier).to receive(:get).and_return(passed_json)
+    expect(@notifier).to receive(:put).with(/http/, /"sat":#{80}/, anything())
 
     @monitor.execute @some_url, @some_url
   end

@@ -11,13 +11,15 @@ class HueMonitor
     unstable: 6000
   }
 
+  @@saturation_default = 255
   @@brightness_default = 255
 
-  def initialize(notifier, colors = nil, brightness = nil)
-    @colors = @@color_defaults.dup.merge(colors || {})
+  def initialize(notifier, options = {})
+    @colors = @@color_defaults.dup.merge(options[:colors] || {})
     @colors.keys.each{|k| @colors[k] = @colors[k].to_i}
 
-    @brightness = (brightness || @@brightness_default).to_i
+    @brightness = (options[:brightness] || @@brightness_default).to_i
+    @saturation = (options[:saturation] || @@saturation_default).to_i
     @notifier = notifier
   end
 
@@ -43,9 +45,9 @@ class HueMonitor
 
   def set_color color, url
     hue_url = url
-    put_body = { 'hue' => @colors[color], 'bri' => @brightness }.to_json
+    put_body = { 'hue' => @colors[color], 'bri' => @brightness, 'sat' => @saturation }.to_json
     options = { :content_type => :json }
-    puts @notifier.put hue_url, put_body, options
+    @notifier.put hue_url, put_body, options
   end
 
   def execute jenkins_url, hue_url

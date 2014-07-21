@@ -13,16 +13,24 @@ options = Trollop::options do
   opt :color_passed, "Color for 'passed' status", :short => 'p', :type => :string
   opt :color_unstable, "Color for 'unstable' status", :short => 'u', :type => :string
   opt :brightness, "Brightness for the light (0-lowest, 255-highest)", :short => 'r', :type => :string
+  opt :saturation, "Saturation for the light (0-lowest, 255-highest)", :short => 's', :type => :string
 end
 
 puts options
 
+colors = {
+  building: options[:color_building],
+  passed: options[:color_passed],
+  failed_building: options[:color_failed_building],
+  failed: options[:color_failed],
+  unstable: options[:color_unstable]
+}.reject{|k,v| v.nil?}
+
+brightness = options[:brightness]
+saturation = options[:saturation]
+jenkins_url = options[:jenkins_url]
+hue_url = options[:hue_url]
+
 HueMonitor
-  .new(RestClient, {
-    building: options[:color_building],
-    passed: options[:color_passed],
-    failed_building: options[:color_failed_building],
-    failed: options[:color_failed],
-    unstable: options[:color_unstable]
-  }.reject{|k,v| v.nil?}, options[:brightness])
-  .execute(options[:jenkins_url], options[:hue_url])
+  .new(RestClient, colors: colors, brightness: brightness, saturation: saturation)
+  .execute(jenkins_url, hue_url)

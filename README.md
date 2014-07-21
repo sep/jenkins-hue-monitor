@@ -44,6 +44,13 @@ The aforementioned colors are defaults, but you can also customize each one sepa
 
 The value to pass is the __h__ (hue) part of an [_HSB_](http://colorizer.org/) color, except Hue is expecting a value between 0-65536 instead of 0-360, so scale it (multiply by 65536 and divide by 360).
 
+### OH LOOK. BRIGHTNESS AND SATURATION
+
+You can also pass in arguments for the light's brightness and saturation. We've picked VERY SENSIBLE DEFAULTS ("as high as they will go and no higher") but if you want to tinker with it, you disgusting perfectionist, just add these flags:
+
+* `-s` lets you customize the _saturation_ (with values of 0-255. try something different and it's ON YOUR HEAD)
+* `-r` lets you customize the _brightness_ (same as above. don't get cocky)
+
 ## You had me at "Hue". How does this work?
 
 There are a few prerequisites for E-Z Mode:
@@ -73,7 +80,8 @@ The instructions below assume you're using RVM in Linux and have Ruby 2.0 instal
         ruby hue_runner.rb                          \
         -j http://jenkins/view/MyView/api/json      \
         -l http://huebridge/api/user/lights/x/state \
-        -f 0 -w 12750 -b 46920 -p 25717 -u 6000
+        -f 0 -w 12750 -b 46920 -p 25717 -u 6000     \
+		-r 255 -s 255
 </pre>
 
 This assumes you have Jenkins running at `http://jenkins/` with a view called `MyView` that contains all the projects you want to monitor. Additionally you have the Hue Bridge installed at `http://huebridge/` with a username `user` and a light ID of `x`.
