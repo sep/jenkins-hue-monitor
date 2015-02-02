@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'json'
 
 class HueMonitor
@@ -44,14 +42,15 @@ class HueMonitor
   end
 
   def set_color color, url
-    hue_url = url
-    put_body = { 'hue' => @colors[color], 'bri' => @brightness, 'sat' => @saturation }.to_json
-    options = { :content_type => :json }
-    @notifier.put hue_url, put_body, options
+    hue_url = URI(url)
+    put_body = { 'hue' => @colors[color], 'bri' => @brightness, 'sat' => @saturation }
+    http_headers = { 'Content-Type' => 'application/json' }
+
+    @notifier.put hue_url, put_body, http_headers
   end
 
   def execute jenkins_url, hue_url
-    jenkins_view = JSON.parse(@notifier.get jenkins_url)
+    jenkins_view = JSON.parse(@notifier.get URI(jenkins_url))
     statuses = jenkins_view['jobs'].map {|j| j['color']}.uniq
 
     if is_building? statuses
@@ -71,4 +70,3 @@ class HueMonitor
     end
   end
 end
-

@@ -1,8 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'trollop'
-gem 'json'
-gem 'rest-client'
+gem 'json_pure'
 
 group :test do
   gem 'rspec'

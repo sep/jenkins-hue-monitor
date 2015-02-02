@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
-require 'rest-client'
+require 'net/http'
 require 'trollop'
 require_relative 'hue_monitor'
+require_relative 'rest_client_abstraction'
 
 options = Trollop::options do
   opt :hue_url, "URL for the Hue light REST endpoint", :short => 'l', :type => :string
@@ -32,5 +33,5 @@ jenkins_url = options[:jenkins_url]
 hue_url = options[:hue_url]
 
 HueMonitor
-  .new(RestClient, colors: colors, brightness: brightness, saturation: saturation)
+  .new(RestClientAbstraction.new, colors: colors, brightness: brightness, saturation: saturation)
   .execute(jenkins_url, hue_url)
