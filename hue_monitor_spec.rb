@@ -4,15 +4,15 @@ describe HueMonitor, "#execute" do
   RSpec::Matchers.define :a_hue_indicating do |hue|
     match {|actual| actual['hue'] == hue}
   end
-  
+
   RSpec::Matchers.define :a_brightness_of do |brightness|
     match {|actual| actual['bri'] == brightness}
   end
-  
+
   RSpec::Matchers.define :a_saturation_of do |saturation|
     match {|actual| actual['sat'] == saturation}
   end
-  
+
   before :each do
     @notifier = double('notifier')
     @monitor = HueMonitor.new @notifier
@@ -141,6 +141,30 @@ describe HueMonitor, "saturation" do
 
     allow(@notifier).to receive(:get).and_return(passed_json)
     expect(@notifier).to receive(:put).with(an_instance_of(URI::HTTP), a_saturation_of(80), anything())
+
+    @monitor.execute @some_url, @some_url
+  end
+end
+
+describe HueMonitor, "credentials" do
+  before :each do
+    @notifier = double('notifier')
+    @some_url = "http://url"
+  end
+
+  it 'sets the credentials' do
+    auth_token = 'user:token'
+    expected_options = {
+      user: 'user',
+      password: 'token'
+    }
+    @monitor = HueMonitor.new(@notifier, credentials: 'user:token')
+
+    expect(@notifier).
+      to receive(:get).
+          with(a_kind_of(URI), expected_options).
+          and_return(passed_json)
+    allow(@notifier).to receive(:put)
 
     @monitor.execute @some_url, @some_url
   end

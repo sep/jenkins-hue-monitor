@@ -18,6 +18,7 @@ class HueMonitor
 
     @brightness = (options[:brightness] || @@brightness_default).to_i
     @saturation = (options[:saturation] || @@saturation_default).to_i
+    @user_token = options[:credentials]
     @notifier = notifier
   end
 
@@ -49,8 +50,16 @@ class HueMonitor
     @notifier.put hue_url, put_body, http_headers
   end
 
+  def get_options
+    if !@user_token.nil? && !@user_token.empty? && @user_token.include?(':')
+      user_tokens = @user_token.split(':')
+      { user: user_tokens.first, password: user_tokens.last }
+    end
+  end
+
   def execute jenkins_url, hue_url
-    jenkins_view = JSON.parse(@notifier.get URI(jenkins_url))
+    jenkins_view_json = @notifier.get URI(jenkins_url), get_options
+    jenkins_view = JSON.parse(jenkins_view_json)
     statuses = jenkins_view['jobs'].map {|j| j['color']}.uniq
 
     if is_building? statuses

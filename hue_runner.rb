@@ -15,6 +15,7 @@ options = Trollop::options do
   opt :color_unstable, "Color for 'unstable' status", :short => 'u', :type => :string
   opt :brightness, "Brightness for the light (0-lowest, 255-highest)", :short => 'r', :type => :string
   opt :saturation, "Saturation for the light (0-lowest, 255-highest)", :short => 's', :type => :string
+  opt :credentials, "User credentials for Jenkins access", :short => 'c', :type => :string
 end
 
 puts options
@@ -27,11 +28,15 @@ colors = {
   unstable: options[:color_unstable]
 }.reject{|k,v| v.nil?}
 
-brightness = options[:brightness]
-saturation = options[:saturation]
+runner_options = {
+  brightness: options[:brightness],
+  saturation: options[:saturation],
+  credentials: options[:credentials]
+}
+
 jenkins_url = options[:jenkins_url]
 hue_url = options[:hue_url]
 
 HueMonitor
-  .new(RestClientAbstraction.new, colors: colors, brightness: brightness, saturation: saturation)
+  .new(RestClientAbstraction.new, runner_options)
   .execute(jenkins_url, hue_url)

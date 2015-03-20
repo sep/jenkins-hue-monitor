@@ -1,11 +1,21 @@
 class RestClientAbstraction
-  def get(jenkins_url)
-    Net::HTTP.get(jenkins_url)
+  def get(url, options)
+    request = Net::HTTP::Get.new(url.path)
+
+    if !options[:user].nil? && !options[:password].nil?
+      request.basic_auth(options[:user], options[:password])
+    end
+
+    response = Net::HTTP.new(url.host, url.port).start do |http|
+      http.request(request)
+    end
+
+    response.body
   end
     
-  def put(hue_url, put_body, http_headers)
-    http = Net::HTTP.new hue_url.host
-    request = Net::HTTP::Put.new(hue_url.path)
+  def put(url, put_body, http_headers)
+    http = Net::HTTP.new url.host
+    request = Net::HTTP::Put.new(url.path)
     request.body = put_body.to_json
     http_headers.each {|header, value| request[header] = value }
     http.request(request)
