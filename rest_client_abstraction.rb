@@ -2,7 +2,7 @@ class RestClientAbstraction
   def get(url, options)
     request = Net::HTTP::Get.new(url.path)
 
-    if !options[:user].nil? && !options[:password].nil?
+    if !options.nil? && !options[:user].nil? && !options[:password].nil?
       request.basic_auth(options[:user], options[:password])
     end
 
